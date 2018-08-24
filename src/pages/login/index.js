@@ -2,14 +2,14 @@
 * @Author: Tom
 * @Date:   2018-08-23 16:46:38
 * @Last Modified by:   TomChen
-* @Last Modified time: 2018-08-24 11:40:50
+* @Last Modified time: 2018-08-24 14:43:42
 */
 import React,{ Component } from 'react';
 import { connect } from 'react-redux'
 import { Form, Icon, Input, Button,message } from 'antd';
-
 import axios from 'axios';
 
+import { actionCreator } from './store'
 import './index.css'
 
 const FormItem = Form.Item;
@@ -26,32 +26,7 @@ class NormalLoginForm extends Component{
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-      	this.setState({
-      		isFetching:true
-      	})
-        axios({
-					method: 'post',
-					url: 'http://127.0.0.1:3000/admin/login',
-					data: values
-				})
-				.then((result)=>{
-					let data = result.data;
-					//登录成功	
-					if(data.code == 0){
-						window.location.href = '/'
-					}else if(data.code == 10){
-						message.error(data.message)
-					}
-					this.setState({
-	      		isFetching:false
-	      	})
-				})
-				.catch((err)=>{
-					message.error('网络错误,请稍后在试!')
-					this.setState({
-	      		isFetching:false
-	      	})					
-				})
+      	this.props.handleLogin(values);
       }
     });
   }
@@ -100,4 +75,13 @@ const mapStateToProps = (state)=>{
 	}
 }
 
-export default connect(mapStateToProps,null)(Login);
+const mapDispatchToProps = (dispatch)=>{
+	return{
+		handleLogin:(values)=>{
+			const action = actionCreator.getLoginAction(values);
+			dispatch(action);
+		}
+	}
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Login);
