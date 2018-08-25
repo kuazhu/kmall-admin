@@ -2,7 +2,7 @@
 * @Author: TomChen
 * @Date:   2018-08-16 09:57:02
 * @Last Modified by:   TomChen
-* @Last Modified time: 2018-08-24 16:12:52
+* @Last Modified time: 2018-08-25 09:23:14
 */
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -29,7 +29,8 @@ module.exports = {
         alias:{
             pages:path.resolve(__dirname,'./src/pages'),
             util:path.resolve(__dirname,'./src/util'),
-            api:path.resolve(__dirname,'./src/api')
+            api:path.resolve(__dirname,'./src/api'),
+            common:path.resolve(__dirname,'./src/common')
         }
     },
 	//配置loader

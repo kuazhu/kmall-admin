@@ -2,7 +2,7 @@
 * @Author: TomChen
 * @Date:   2018-08-16 17:14:09
 * @Last Modified by:   TomChen
-* @Last Modified time: 2018-08-24 17:13:45
+* @Last Modified time: 2018-08-25 11:29:25
 */
 import React,{ Component } from 'react';
 import {
@@ -15,6 +15,7 @@ import {
 
 import Login from 'pages/login'
 import Home from 'pages/home'
+import User from 'pages/user'
 
 import { getUserName } from 'util'
 
@@ -24,7 +25,7 @@ import './App.css';
 
 class App extends Component{
 	render(){
-		const ProtectedRouter = ({component:Component,...rest})=>(
+		const ProtectedRoute = ({component:Component,...rest})=>(
 			<Route 
 				{...rest}
 				render = {props=>(
@@ -35,7 +36,7 @@ class App extends Component{
 			/>
 		)
 
-		const LoginRouter =({component:Component,...rest})=>{
+		const LoginRoute =({component:Component,...rest})=>{
 			if(getUserName()){
 				return <Redirect to="/" />
 			}else{
@@ -46,8 +47,11 @@ class App extends Component{
 		return(
 			<Router>
 				<div className="App">
-					<ProtectedRouter exact path="/" component={ Home } />				
-					<LoginRouter path="/login" component={ Login } />
+					<Switch>
+						<ProtectedRoute exact path="/" component={ Home } />				
+						<ProtectedRoute path="/user" component={ User } />				
+						<LoginRoute path="/login" component={ Login } />
+					</Switch>	
 				</div>		
 			</Router>	
 		)
