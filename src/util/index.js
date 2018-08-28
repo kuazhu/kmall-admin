@@ -2,21 +2,31 @@
 * @Author: TomChen
 * @Date:   2018-08-24 15:56:51
 * @Last Modified by:   TomChen
-* @Last Modified time: 2018-08-24 17:00:24
+* @Last Modified time: 2018-08-27 11:04:33
 */
 import axios from 'axios';
 
-
 export const request = (options)=>{
 	return new Promise((resolve,reject)=>{
-        axios({
+		const params = {
 			method: options.method || 'get',
 			url: options.url || '',
-			data: options.data || null
-		})
+			withCredentials: true			
+		}
+
+		switch(params.method.toUpperCase()){
+			case 'GET':
+			case 'DELETE':
+				params.params = options.data;
+				break;
+			default:
+				params.data = options.data;
+		}
+        axios(params)
 		.then(result=>{
 			let data = result.data;
 			if(data.code == 10){
+				removeUserName();
 				window.location.href = '/login';
 				reject(data.message);
 			}else{

@@ -2,12 +2,11 @@
 * @Author: Tom
 * @Date:   2018-08-23 16:46:38
 * @Last Modified by:   TomChen
-* @Last Modified time: 2018-08-24 14:43:42
+* @Last Modified time: 2018-08-27 16:18:49
 */
 import React,{ Component } from 'react';
 import { connect } from 'react-redux'
 import { Form, Icon, Input, Button,message } from 'antd';
-import axios from 'axios';
 
 import { actionCreator } from './store'
 import './index.css'
@@ -18,18 +17,15 @@ class NormalLoginForm extends Component{
 	constructor(props){
 		super(props);
 		this.handleSubmit = this.handleSubmit.bind(this);
-		this.state = {
-			isFetching:false
-		}
 	}
-  handleSubmit(e){
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-      	this.props.handleLogin(values);
-      }
-    });
-  }
+	handleSubmit(e){
+		e.preventDefault();
+		this.props.form.validateFields((err, values) => {
+		  if (!err) {
+		  	this.props.handleLogin(values);
+		  }
+		});
+	}
 
   render() {
     const { getFieldDecorator } = this.props.form;

@@ -2,7 +2,7 @@
 * @Author: TomChen
 * @Date:   2018-08-16 17:14:09
 * @Last Modified by:   TomChen
-* @Last Modified time: 2018-08-25 11:29:25
+* @Last Modified time: 2018-08-27 15:18:47
 */
 import React,{ Component } from 'react';
 import {
@@ -16,6 +16,8 @@ import {
 import Login from 'pages/login'
 import Home from 'pages/home'
 import User from 'pages/user'
+import Category from 'pages/category'
+import ErrorPage from 'common/error-page'
 
 import { getUserName } from 'util'
 
@@ -50,7 +52,9 @@ class App extends Component{
 					<Switch>
 						<ProtectedRoute exact path="/" component={ Home } />				
 						<ProtectedRoute path="/user" component={ User } />				
+						<ProtectedRoute path="/category" component={ Category } />				
 						<LoginRoute path="/login" component={ Login } />
+						<Route component={ ErrorPage }  />
 					</Switch>	
 				</div>		
 			</Router>	
