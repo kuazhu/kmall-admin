@@ -2,13 +2,13 @@
 * @Author: TomChen
 * @Date:   2018-08-27 15:19:33
 * @Last Modified by:   TomChen
-* @Last Modified time: 2018-08-28 17:29:03
+* @Last Modified time: 2018-08-30 10:51:51
 */
 import React,{ Component } from 'react';
 import { Link} from 'react-router-dom';
 import { connect } from 'react-redux'
 
-import { Breadcrumb,Button,Table,Divider,InputNumber,Modal } from 'antd';
+import { Breadcrumb,Button,Table,Divider,InputNumber,Modal,Input } from 'antd';
 import { actionCreator } from './store'
 import Layout from 'common/layout'
 
@@ -55,7 +55,12 @@ class CategoryList extends Component{
 			  dataIndex: 'order',
 			  key: 'order',
 			  render:(order,record)=>{
-			  	return <InputNumber defaultValue={order}  />
+			  	return <InputNumber 
+			  				defaultValue={order} 
+			  				onBlur={(e)=>{
+			  					this.props.handleOrder(pid,record.id,e.target.value)
+			  				}} 
+			  			/>
 			  }
 			},
 			{
@@ -129,10 +134,19 @@ class CategoryList extends Component{
 					<Modal
 						title="修改分类名称"
 						visible={this.props.updateModalVisible}
-						onOk={this.props.handleUpdateName}
-						onCancel={this.props.handleCancelName}
+						onOk={()=>{
+							this.props.handleUpdateName(pid)
+						}}
+						onCancel={this.props.handleCloseUpdateModal}
+						cancelText="取消"
+						okText="确定"
 					>
-					<p>Some contents...</p>
+						<Input 
+							value={this.props.updateName}
+							onChange={(e)=>{
+								this.props.handleChangeName(e.target.value)
+							}}
+						/>
 					</Modal>										
 					
 				</div>
@@ -149,6 +163,7 @@ const mapStateToProps = (state)=>{
 		pageSize:state.get('category').get('pageSize'),
 		list:state.get('category').get('list'),		
 		updateModalVisible:state.get('category').get('updateModalVisible'),		
+		updateName:state.get('category').get('updateName'),		
 	}
 }
 
@@ -159,6 +174,18 @@ const mapDispatchToProps = (dispatch)=>{
 		},
 		showUpdateModal:(updateId,updateName)=>{
 			dispatch(actionCreator.getShowUpdateModalAction(updateId,updateName));
+		},
+		handleChangeName:(newName)=>{
+			dispatch(actionCreator.getChangeNameAction(newName));
+		},
+		handleUpdateName:(pid)=>{
+			dispatch(actionCreator.getUpdateNameAction(pid));
+		},
+		handleCloseUpdateModal:()=>{
+			dispatch(actionCreator.getCloseUpdateModalAction());
+		},
+		handleOrder:(pid,id,newOrder)=>{
+			dispatch(actionCreator.getUpdateOrderAction(pid,id,newOrder));
 		}
 	}
 }

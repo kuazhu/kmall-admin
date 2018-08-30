@@ -2,12 +2,12 @@
 * @Author: TomChen
 * @Date:   2018-08-24 14:39:19
 * @Last Modified by:   TomChen
-* @Last Modified time: 2018-08-28 17:19:31
+* @Last Modified time: 2018-08-30 11:02:12
 */
 import { message } from 'antd';
 
 import { request } from 'util'
-import { ADD_CATEGORY,GET_CATEGORIES } from 'api'
+import { ADD_CATEGORY,GET_CATEGORIES,UPDATE_CATEGORY_NAME,UPDATE_CATEGORY_ORDER   } from 'api'
 
 import * as types from './actionTypes.js'
 
@@ -129,5 +129,66 @@ export const getShowUpdateModalAction = (updateId,updateName)=>{
 			updateName
 		}
 	}
+}
+export const getCloseUpdateModalAction = ()=>({
+	type:types.CLOSE_UPDATE_MODAL
+})
+export const getChangeNameAction = (payload)=>({
+	type:types.CHANGE_NAME,
+	payload
+})
+
+
+export const getUpdateNameAction = (pid)=>{
+	return (dispatch,getState)=>{
+		const state = getState().get('category');
+        request({
+			method: 'put',
+			url: UPDATE_CATEGORY_NAME,
+			data: {
+				id:state.get('updateId'),
+				name:state.get('updateName'),
+				pid:pid,
+				page:state.get('current')
+			}
+		})
+		.then((result)=>{
+			if(result.code == 0){
+				dispatch(getSetPageAction(result.data))
+				dispatch(getCloseUpdateModalAction());	
+			}else{
+				message.error(result.message)
+			}
+		})
+		.catch((err)=>{
+			message.error('网络错误,请稍后在试!')
+		})
+	}	
+}
+
+export const getUpdateOrderAction = (pid,id,newOrder)=>{
+	return (dispatch,getState)=>{
+		const state = getState().get('category');
+        request({
+			method: 'put',
+			url: UPDATE_CATEGORY_ORDER,
+			data: {
+				id:id,
+				order:newOrder,
+				pid:pid,
+				page:state.get('current')
+			}
+		})
+		.then((result)=>{
+			if(result.code == 0){
+				dispatch(getSetPageAction(result.data))
+			}else{
+				message.error(result.message)
+			}
+		})
+		.catch((err)=>{
+			message.error('网络错误,请稍后在试!')
+		})
+	}	
 }
 

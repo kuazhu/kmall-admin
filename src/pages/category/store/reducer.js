@@ -2,7 +2,7 @@
 * @Author: TomChen
 * @Date:   2018-08-20 09:18:25
 * @Last Modified by:   TomChen
-* @Last Modified time: 2018-08-28 17:20:55
+* @Last Modified time: 2018-08-30 09:51:14
 */
 import { fromJS } from 'immutable'
 
@@ -58,6 +58,12 @@ export default (state=defaultState,action)=>{
 			updateId:action.payload.updateId,
 			updateName:action.payload.updateName,
 		})		
+	}
+	if(action.type === types.CLOSE_UPDATE_MODAL){
+		return state.set('updateModalVisible',false);
+	}
+	if(action.type === types.CHANGE_NAME){
+		return state.set('updateName',action.payload)
 	}
 
 	return state;

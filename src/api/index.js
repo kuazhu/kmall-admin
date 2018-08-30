@@ -2,7 +2,7 @@
 * @Author: TomChen
 * @Date:   2018-08-24 16:09:28
 * @Last Modified by:   TomChen
-* @Last Modified time: 2018-08-28 09:18:43
+* @Last Modified time: 2018-08-30 10:52:45
 */
 
 const SERVER = 'http://127.0.0.1:3000/';
@@ -14,3 +14,5 @@ export const  GET_USERS = SERVER + 'admin/users';
 
 export const ADD_CATEGORY = SERVER + 'category'
 export const GET_CATEGORIES = SERVER + 'category'
+export const UPDATE_CATEGORY_NAME = SERVER + 'category/updateName'
+export const UPDATE_CATEGORY_ORDER = SERVER + 'category/updateOrder'
