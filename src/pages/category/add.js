@@ -2,7 +2,7 @@
 * @Author: TomChen
 * @Date:   2018-08-27 15:19:33
 * @Last Modified by:   TomChen
-* @Last Modified time: 2018-08-28 09:31:18
+* @Last Modified time: 2018-08-30 14:42:49
 */
 import React,{ Component } from 'react';
 import { Breadcrumb,Form, Input,Select,Button } from 'antd';
@@ -36,11 +36,11 @@ class NormalCategoryAdd extends Component{
 	    const formItemLayout = {
 	      labelCol: {
 	        xs: { span: 24 },
-	        sm: { span: 8 },
+	        sm: { span: 2 },
 	      },
 	      wrapperCol: {
 	        xs: { span: 24 },
-	        sm: { span: 16 },
+	        sm: { span: 22 },
 	      },
 	    };
 	    const tailFormItemLayout = {
@@ -51,10 +51,10 @@ class NormalCategoryAdd extends Component{
 	        },
 	        sm: {
 	          span: 16,
-	          offset: 8,
+	          offset: 2,
 	        },
 	      },
-	    };		
+	    };	
 		return(
 			<Layout>
 				<div>
@@ -62,7 +62,7 @@ class NormalCategoryAdd extends Component{
 						<Breadcrumb.Item>分类管理</Breadcrumb.Item>
 						<Breadcrumb.Item>添加分类</Breadcrumb.Item>
 					</Breadcrumb>
-					<Form>
+					<Form style={{marginTop:30}}>
 				        <FormItem
 				          {...formItemLayout}
 				          label="分类名称"
@@ -73,7 +73,10 @@ class NormalCategoryAdd extends Component{
 				              required: true, message: '请输入分类名称',
 				            }],
 				          })(
-				            <Input />
+				            <Input 
+				            	style={{ width: 300 }} 
+				            	placeholder="分类名称"
+				            />
 				          )}
 				        </FormItem>
 				        <FormItem
