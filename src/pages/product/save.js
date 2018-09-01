@@ -2,7 +2,7 @@
 * @Author: TomChen
 * @Date:   2018-08-27 15:19:33
 * @Last Modified by:   TomChen
-* @Last Modified time: 2018-08-30 16:41:29
+* @Last Modified time: 2018-09-01 10:07:03
 */
 import React,{ Component } from 'react';
 import { Breadcrumb,Form, Input,Select,Button,InputNumber } from 'antd';
@@ -11,6 +11,10 @@ import { actionCreator } from './store'
 
 import Layout from 'common/layout'
 import CategorySelector  from './category-selector.js'
+import UploadImage from 'common/upload-image'
+import RichEditor from 'common/rich-editor'
+
+import  { UPLOAD_PRODUCT_IMAGE,UPLOAD_PRODUCT_DETAIL_IMAGE } from 'api'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -24,9 +28,7 @@ class NormalProductSave extends Component{
 	handleSubmit(e){
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
-		  if (!err) {
-		  	this.props.handleAdd(values);
-		  }
+		  	this.props.handleSave(err,values);
 		});
 	}	
 	render(){
@@ -94,10 +96,13 @@ class NormalProductSave extends Component{
 				        <FormItem
 				          {...formItemLayout}
 				          label="所属分类"
+				          required={true}
+				          validateStatus={this.props.categoryIdValidateStatus}
+				          help={this.props.categoryIdHelp}
 				        >
 				        	<CategorySelector
-				        		getCategoryId={(pid,id)=>{
-				        			console.log(pid,id)
+				        		getCategoryId={(parentCategoryId,categoryId)=>{
+				        			this.props.handleCategory(parentCategoryId,categoryId)
 				        		}}
 				        	 />
 
@@ -142,19 +147,32 @@ class NormalProductSave extends Component{
 				          {...formItemLayout}
 				          label="商品图片"
 				        >
-			
+							<UploadImage
+								action={UPLOAD_PRODUCT_IMAGE}
+								max={3}
+								getFileList={
+									(fileList)=>{
+										this.props.handleImages(fileList)
+									}
+								}
+							 />
 				        </FormItem>	
 				        <FormItem
 				          {...formItemLayout}
 				          label="商品详情"
 				        >
-			
+							<RichEditor
+								url = {UPLOAD_PRODUCT_DETAIL_IMAGE}
+								getRichEditorValue = {(value)=>{
+									this.props.handleDetail(value)
+								}}
+							 />
 				        </FormItem>					        				        				        					        			        
 				        <FormItem {...tailFormItemLayout}>
 				        	<Button 
 				          		type="primary"
 				          		onClick={this.handleSubmit}
-				          		loading={this.props.isAddFetching}
+				          		loading={this.props.isSaveFetching}
 				          	>
 				          	提交
 				        	</Button>
@@ -171,18 +189,25 @@ const ProductSave = Form.create()(NormalProductSave);
 
 const mapStateToProps = (state)=>{
 	return {
-		isAddFetching:state.get('category').get('isAddFetching'),
-		levelOneCategories:state.get('category').get('levelOneCategories')
+		categoryIdValidateStatus:state.get('product').get('categoryIdValidateStatus'),
+		categoryIdHelp:state.get('product').get('categoryIdHelp'),
+		isSaveFetching:state.get('product').get('isSaveFetching'),
 	}
 }
 
 const mapDispatchToProps = (dispatch)=>{
 	return{
-		handleAdd:(values)=>{
-			dispatch(actionCreator.getAddAction(values));
+		handleSave:(err,values)=>{
+			dispatch(actionCreator.getSaveAction(err,values));
 		},
-		getLevelOneCategories:()=>{
-			dispatch(actionCreator.getLevelOneCategoriesAction());
+		handleCategory:(parentCategoryId,categoryId)=>{
+			dispatch(actionCreator.getSetCategoryAction(parentCategoryId,categoryId));
+		},
+		handleImages:(fileList)=>{
+			dispatch(actionCreator.getSetImagesAction(fileList));
+		},
+		handleDetail:(value)=>{
+			dispatch(actionCreator.getSetDetailAction(value));
 		}
 	}
 }

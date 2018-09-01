@@ -2,31 +2,44 @@
 * @Author: TomChen
 * @Date:   2018-08-24 14:39:19
 * @Last Modified by:   TomChen
-* @Last Modified time: 2018-08-30 11:02:12
+* @Last Modified time: 2018-09-01 11:44:30
 */
 import { message } from 'antd';
 
 import { request } from 'util'
-import { ADD_CATEGORY,GET_CATEGORIES,UPDATE_CATEGORY_NAME,UPDATE_CATEGORY_ORDER   } from 'api'
+import { ADD_PRODUCT,GET_PRODUCTS,UPDATE_PRODUCT_ORDER,UPDATE_PRODUCT_STATUS } from 'api'
 
 import * as types from './actionTypes.js'
 
-const getAddRequstAction = ()=>{
+export const getSetCategoryAction = (parentCategoryId,categoryId)=>({
+	type:types.SET_CATEGORY,
+	payload:{
+		parentCategoryId,
+		categoryId
+	}
+})
+export const getSetImagesAction = (fileList)=>({
+	type:types.SET_IMAGES,
+	payload:fileList
+})
+export const getSetDetailAction = (value)=>({
+	type:types.SET_DETAIL,
+	payload:value
+})
+
+
+
+
+const getSaveRequstAction = ()=>{
 	return {
-		type:types.ADD_REQUEST
+		type:types.SAVE_REQUEST
 	}
 }
 
-const getAddDoneAction = ()=>{
+const getSaveDoneAction = ()=>{
 	return {
-		type:types.ADD_DONE
+		type:types.SAVE_DONE
 	}
-}
-const setLevelOneCategories = (payload)=>{
-	return {
-		type:types.SET_LEVEL_ONE_CATEGORIES,
-		payload
-	}	
 }
 
 const getPageRequstAction = ()=>{
@@ -46,63 +59,53 @@ const getSetPageAction = (payload)=>{
 		payload
 	}
 }
-export const getAddAction = (values)=>{
-	return (dispatch)=>{
-		dispatch(getAddRequstAction())
+const setCategoryError = ()=>({
+	type:types.SET_CATEGORY_ERROR
+})
+export const getSaveAction = (err,values)=>{
+	return (dispatch,getState)=>{
+		const state = getState().get('product');
+		const  categoryId = state.get('categoryId');
+		if(!categoryId){
+			dispatch(setCategoryError())
+			return;
+		}
+		if(err){
+			return;
+		}
+		dispatch(getSaveRequstAction())
         request({
 			method: 'post',
-			url: ADD_CATEGORY,
-			data: values
+			url: ADD_PRODUCT,
+			data: {
+				...values,
+				category:categoryId,
+				images:state.get('images'),
+				detail:state.get('detail')
+			}
 		})
 		.then((result)=>{
 			if(result.code == 0){
-				if(result.data){//如果添加的是一级分类,从新更新一级分类
-					dispatch(setLevelOneCategories(result.data))
-				}
-				message.success('添加分类成功')	
-			}else{
-				message.error(result.message)
+				message.success(result.message)
+				window.location.href = '/product'
 			}
-			dispatch(getAddDoneAction())
+			dispatch(getSaveDoneAction())
 		})
 		.catch((err)=>{
 			message.error('网络错误,请稍后在试!')
-			dispatch(getAddDoneAction())				
+			dispatch(getSaveDoneAction())				
 		})
 	}
 }
 
 
-export const getLevelOneCategoriesAction = ()=>{
-	return (dispatch)=>{
-        request({
-			method: 'get',
-			url: GET_CATEGORIES,
-			data: {
-				pid:0
-			}
-		})
-		.then((result)=>{
-			if(result.code == 0){
-				dispatch(setLevelOneCategories(result.data))	
-			}else{
-				message.error(result.message)
-			}
-		})
-		.catch((err)=>{
-			message.error('网络错误,请稍后在试!')
-		})
-	}	
-}
-
-export const getPageAction = (pid,page)=>{
+export const getPageAction = (page)=>{
 	return (dispatch)=>{
 		dispatch(getPageRequstAction());
         request({
 			method: 'get',
-			url: GET_CATEGORIES,
+			url: GET_PRODUCTS,
 			data: {
-				pid:pid,
 				page:page
 			}
 		})
@@ -121,41 +124,21 @@ export const getPageAction = (pid,page)=>{
 	}	
 }
 
-export const getShowUpdateModalAction = (updateId,updateName)=>{
-	return {
-		type:types.SHOW_UPDATE_MODAL,
-		payload:{
-			updateId,
-			updateName
-		}
-	}
-}
-export const getCloseUpdateModalAction = ()=>({
-	type:types.CLOSE_UPDATE_MODAL
-})
-export const getChangeNameAction = (payload)=>({
-	type:types.CHANGE_NAME,
-	payload
-})
-
-
-export const getUpdateNameAction = (pid)=>{
+export const getUpdateOrderAction = (id,newOrder)=>{
 	return (dispatch,getState)=>{
-		const state = getState().get('category');
+		const state = getState().get('product');
         request({
 			method: 'put',
-			url: UPDATE_CATEGORY_NAME,
+			url: UPDATE_PRODUCT_ORDER,
 			data: {
-				id:state.get('updateId'),
-				name:state.get('updateName'),
-				pid:pid,
+				id:id,
+				order:newOrder,
 				page:state.get('current')
 			}
 		})
 		.then((result)=>{
 			if(result.code == 0){
 				dispatch(getSetPageAction(result.data))
-				dispatch(getCloseUpdateModalAction());	
 			}else{
 				message.error(result.message)
 			}
@@ -165,25 +148,24 @@ export const getUpdateNameAction = (pid)=>{
 		})
 	}	
 }
-
-export const getUpdateOrderAction = (pid,id,newOrder)=>{
+export const getUpdateStatusAction = (id,newStatus)=>{
 	return (dispatch,getState)=>{
-		const state = getState().get('category');
+		const state = getState().get('product');
         request({
 			method: 'put',
-			url: UPDATE_CATEGORY_ORDER,
+			url: UPDATE_PRODUCT_STATUS,
 			data: {
 				id:id,
-				order:newOrder,
-				pid:pid,
+				status:newStatus,
 				page:state.get('current')
 			}
 		})
 		.then((result)=>{
 			if(result.code == 0){
-				dispatch(getSetPageAction(result.data))
+				message.success(result.message)
 			}else{
 				message.error(result.message)
+				dispatch(getSetPageAction(result.data))
 			}
 		})
 		.catch((err)=>{

@@ -2,7 +2,7 @@
 * @Author: TomChen
 * @Date:   2018-08-20 09:18:25
 * @Last Modified by:   TomChen
-* @Last Modified time: 2018-08-30 09:51:14
+* @Last Modified time: 2018-09-01 10:06:35
 */
 import { fromJS } from 'immutable'
 
@@ -10,26 +10,56 @@ import * as types from './actionTypes.js'
 
 //用fromJS包装一个immutable对象
 const defaultState = fromJS({
-	isAddFetching:false,
-	levelOneCategories:[],
+	parentCategoryId:'',
+	categoryId:'',
+	images:'',
+	detail:'',
+	categoryIdValidateStatus:'',
+	categoryIdHelp:'',
 	isPageFetching:false,
 	current:0,
 	total:0,
 	pageSize:0,
 	list:[],
+	isSaveFetching:false,
+	
+	levelOneCategories:[],
 	updateModalVisible:false,
 	updateId:'',
 	updateName:''		
 })
 
 export default (state=defaultState,action)=>{
-	
-	if(action.type === types.ADD_REQUEST){
-		return state.set('isAddFetching',true)
+
+	if(action.type === types.SET_CATEGORY){
+		return state.merge({
+			parentCategoryId:action.payload.parentCategoryId,
+			categoryId:action.payload.categoryId,
+			categoryIdValidateStatus:'',
+			categoryIdHelp:'',				
+		})
+	}
+	if(action.type === types.SET_IMAGES){
+		return state.set('images',action.payload)
+	}
+	if(action.type === types.SET_DETAIL){
+		return state.set('detail',action.payload)
 	}
 
-	if(action.type === types.ADD_DONE){
-		return state.set('isAddFetching',false)
+	if(action.type === types.SET_CATEGORY_ERROR){
+		return state.merge({
+			categoryIdValidateStatus:'error',
+			categoryIdHelp:'请选择所属分类',			
+		})
+	}
+	
+
+	if(action.type === types.SAVE_REQUEST){
+		return state.set('isSaveFetching',true)
+	}
+
+	if(action.type === types.SAVE_DONE){
+		return state.set('isSaveFetching',false)
 	}
 	if(action.type === types.SET_LEVEL_ONE_CATEGORIES){
 		return state.set('levelOneCategories',fromJS(action.payload))
