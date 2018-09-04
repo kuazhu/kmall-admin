@@ -2,7 +2,7 @@
 * @Author: TomChen
 * @Date:   2018-08-27 15:19:33
 * @Last Modified by:   TomChen
-* @Last Modified time: 2018-09-01 11:34:28
+* @Last Modified time: 2018-09-03 17:11:31
 */
 import React,{ Component } from 'react';
 import { Link} from 'react-router-dom';
@@ -11,6 +11,7 @@ import { connect } from 'react-redux'
 import { Breadcrumb,Button,Table,Divider,InputNumber,Modal,Input,Switch } from 'antd';
 import { actionCreator } from './store'
 import Layout from 'common/layout'
+const Search = Input.Search;
 
 class ProductList extends Component{
 	constructor(props){
@@ -20,6 +21,7 @@ class ProductList extends Component{
 		this.props.handlePage(1);
 	}
 	render(){
+		const { keyword } = this.props;
 		const columns = [
 			{
 			  title: 'id',
@@ -30,6 +32,15 @@ class ProductList extends Component{
 			  title: '商品名称',
 			  dataIndex: 'name',
 			  key: 'name',
+			  render:(name)=>{
+			  	if(keyword){
+			  		let reg = new RegExp("("+keyword+")",'ig');
+			  		let html = name.replace(reg,"<b style='color:red'>$1</b>");
+			  		return <span dangerouslySetInnerHTML={{__html:html}}></span>;
+			  	}else{
+			  		return name;
+			  	}
+			  }
 			},
 			{
 			  title: '状态',
@@ -96,6 +107,15 @@ class ProductList extends Component{
 						<Breadcrumb.Item>商品列表</Breadcrumb.Item>
 					</Breadcrumb>
 					<div style={{marginTop:10}} className="clearfix">
+						<Search 
+							style={{ width: 300 }}
+							placeholder="输入商品名称关键字"
+							enterButton
+							onSearch={value => {
+								this.props.handleSearch(value)
+							}}
+						/>
+
 						<Link to="/product/save" style={{ float:'right'}}>
 							<Button type="primary">新增商品</Button>
 						</Link>
@@ -112,7 +132,12 @@ class ProductList extends Component{
 							}
 						}
 						onChange = {(pagination)=>{
-							this.props.handlePage(pagination.current)
+							if(keyword){
+								this.props.handleSearch(keyword,pagination.current)
+							}else{
+								this.props.handlePage(pagination.current)	
+							}
+							
 						}}
 						loading={
 							{
@@ -134,6 +159,7 @@ const mapStateToProps = (state)=>{
 		total:state.get('product').get('total'),
 		pageSize:state.get('product').get('pageSize'),
 		list:state.get('product').get('list'),		
+		keyword:state.get('product').get('keyword'),		
 	}
 }
 
@@ -147,6 +173,9 @@ const mapDispatchToProps = (dispatch)=>{
 		},
 		handleStatus:(id,newStatus)=>{
 			dispatch(actionCreator.getUpdateStatusAction(id,newStatus));
+		},
+		handleSearch:(keyword,page)=>{
+			dispatch(actionCreator.getSearchAction(keyword,page));
 		}
 	}
 }

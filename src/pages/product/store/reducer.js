@@ -2,7 +2,7 @@
 * @Author: TomChen
 * @Date:   2018-08-20 09:18:25
 * @Last Modified by:   TomChen
-* @Last Modified time: 2018-09-01 10:06:35
+* @Last Modified time: 2018-09-03 17:03:00
 */
 import { fromJS } from 'immutable'
 
@@ -22,11 +22,11 @@ const defaultState = fromJS({
 	pageSize:0,
 	list:[],
 	isSaveFetching:false,
-	
-	levelOneCategories:[],
-	updateModalVisible:false,
-	updateId:'',
-	updateName:''		
+	name:'',
+	description:'',	
+	price:'',
+	stock:'',
+	keyword:''	
 })
 
 export default (state=defaultState,action)=>{
@@ -70,6 +70,7 @@ export default (state=defaultState,action)=>{
 			current:action.payload.current,
 			total:action.payload.total,
 			pageSize:action.payload.pageSize,
+			keyword:action.payload.keyword || '',
 			list:fromJS(action.payload.list)
 		})
 	}
@@ -82,19 +83,18 @@ export default (state=defaultState,action)=>{
 		return state.set('isPageFetching',false)
 	}
 
-	if(action.type === types.SHOW_UPDATE_MODAL){
+	if(action.type === types.SET_PRODUCT_DETAIL){
 		return state.merge({
-			updateModalVisible:true,
-			updateId:action.payload.updateId,
-			updateName:action.payload.updateName,
+			parentCategoryId:action.payload.category.pid,
+			categoryId:action.payload.category._id,
+			images:action.payload.images,
+			detail:action.payload.detail,
+			name:action.payload.name,
+			description:action.payload.description,	
+			price:action.payload.price,
+			stock:action.payload.stock			
 		})		
 	}
-	if(action.type === types.CLOSE_UPDATE_MODAL){
-		return state.set('updateModalVisible',false);
-	}
-	if(action.type === types.CHANGE_NAME){
-		return state.set('updateName',action.payload)
-	}
-
+	
 	return state;
 }

@@ -2,12 +2,19 @@
 * @Author: TomChen
 * @Date:   2018-08-24 14:39:19
 * @Last Modified by:   TomChen
-* @Last Modified time: 2018-09-01 11:44:30
+* @Last Modified time: 2018-09-03 16:42:27
 */
 import { message } from 'antd';
 
 import { request } from 'util'
-import { ADD_PRODUCT,GET_PRODUCTS,UPDATE_PRODUCT_ORDER,UPDATE_PRODUCT_STATUS } from 'api'
+import { 
+	SAVE_PRODUCT,
+	GET_PRODUCTS,
+	UPDATE_PRODUCT_ORDER,
+	UPDATE_PRODUCT_STATUS,
+	GET_PRODUCT_DETAIL,
+	SEARCH_PRODUCTS 
+} from 'api'
 
 import * as types from './actionTypes.js'
 
@@ -62,6 +69,8 @@ const getSetPageAction = (payload)=>{
 const setCategoryError = ()=>({
 	type:types.SET_CATEGORY_ERROR
 })
+
+//新增和编辑处理
 export const getSaveAction = (err,values)=>{
 	return (dispatch,getState)=>{
 		const state = getState().get('product');
@@ -73,10 +82,17 @@ export const getSaveAction = (err,values)=>{
 		if(err){
 			return;
 		}
+		//新增处理
+		let method = 'post';
+		//编辑处理
+		if(values.id){
+			method = 'put';
+		}
+
 		dispatch(getSaveRequstAction())
         request({
-			method: 'post',
-			url: ADD_PRODUCT,
+			method: method,
+			url: SAVE_PRODUCT,
 			data: {
 				...values,
 				category:categoryId,
@@ -166,6 +182,53 @@ export const getUpdateStatusAction = (id,newStatus)=>{
 			}else{
 				message.error(result.message)
 				dispatch(getSetPageAction(result.data))
+			}
+		})
+		.catch((err)=>{
+			message.error('网络错误,请稍后在试!')
+		})
+	}	
+}
+
+
+const setProductDetail = (payload)=>({
+	type:types.SET_PRODUCT_DETAIL,
+	payload
+})
+export const getProductDetailAction = (productId)=>{
+	return (dispatch)=>{
+        request({
+			method: 'get',
+			url: GET_PRODUCT_DETAIL,
+			data: {
+				id:productId,
+			}
+		})
+		.then((result)=>{
+			if(result.code == 0){
+				dispatch(setProductDetail(result.data))
+			}
+		})
+		.catch((err)=>{
+			message.error('网络错误,请稍后在试!')
+		})
+	}	
+}
+export const getSearchAction = (keyword,page=1)=>{
+	return (dispatch)=>{
+        request({
+			method: 'get',
+			url: SEARCH_PRODUCTS,
+			data: {
+				keyword,
+				page
+			}
+		})
+		.then((result)=>{
+			if(result.code == 0){
+				dispatch(getSetPageAction(result.data))
+			}else{
+				message.error(result.message)
 			}
 		})
 		.catch((err)=>{

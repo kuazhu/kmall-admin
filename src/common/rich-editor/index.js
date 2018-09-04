@@ -2,7 +2,7 @@
 * @Author: TomChen
 * @Date:   2018-08-31 10:49:51
 * @Last Modified by:   TomChen
-* @Last Modified time: 2018-08-31 15:27:43
+* @Last Modified time: 2018-09-03 15:09:38
 */
 import React,{ Component } from 'react';
 
@@ -16,7 +16,9 @@ import './index.css'
 class RichEditor extends Component{
 	constructor(props){
 		super(props);
-
+		this.state = {
+			isLoaded : false
+		}
 		this.toolbar = [
 			'title',
 			'bold',
@@ -55,10 +57,21 @@ class RichEditor extends Component{
 		  }
 		});
 		this.editor.on('valuechanged',()=>{
-			this.props.getRichEditorValue(this.editor.getValue())
+			this.setState({
+				isLoaded:true
+			},()=>{
+				this.props.getRichEditorValue(this.editor.getValue())
+			})
 		})
 	}
-
+	componentDidUpdate(){
+		if(this.props.detail && !this.state.isLoaded){
+			this.editor.setValue(this.props.detail)
+			this.setState({
+				isLoaded:true
+			})
+		}
+	}
 	render(){
 		return(
 			<div>
