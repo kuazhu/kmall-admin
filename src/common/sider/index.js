@@ -2,7 +2,7 @@
 * @Author: TomChen
 * @Date:   2018-08-24 17:02:20
 * @Last Modified by:   TomChen
-* @Last Modified time: 2018-08-25 11:42:22
+* @Last Modified time: 2018-09-17 15:37:36
 */
 import React,{ Component } from 'react';
 import { Layout, Menu,Icon } from 'antd';
@@ -34,6 +34,9 @@ class MySider extends Component{
 		            <Menu.Item key="4">
 		            	<NavLink to="/product"><Icon type="book" />商品管理</NavLink>
 		            </Menu.Item>
+		            <Menu.Item key="5">
+		            	<NavLink to="/order"><Icon type="shop" />订单管理</NavLink>
+		            </Menu.Item>		            
 		         </Menu>
 		      </Sider>
 			</div>

@@ -2,7 +2,7 @@
 * @Author: TomChen
 * @Date:   2018-08-24 14:39:19
 * @Last Modified by:   TomChen
-* @Last Modified time: 2018-09-03 16:42:27
+* @Last Modified time: 2018-09-17 10:35:42
 */
 import { message } from 'antd';
 
@@ -69,14 +69,26 @@ const getSetPageAction = (payload)=>{
 const setCategoryError = ()=>({
 	type:types.SET_CATEGORY_ERROR
 })
-
+const setImagesError = ()=>({
+	type:types.SET_IMAGES_ERROR
+})
 //新增和编辑处理
 export const getSaveAction = (err,values)=>{
 	return (dispatch,getState)=>{
 		const state = getState().get('product');
+		//自定义验证分类ID
 		const  categoryId = state.get('categoryId');
+		const  images = state.get('images');
+		let hasError = false;
 		if(!categoryId){
 			dispatch(setCategoryError())
+			hasError = true;
+		}
+		if(!images){
+			dispatch(setImagesError())
+			hasError = true;
+		}
+		if(hasError){
 			return;
 		}
 		if(err){

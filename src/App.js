@@ -2,7 +2,7 @@
 * @Author: TomChen
 * @Date:   2018-08-16 17:14:09
 * @Last Modified by:   TomChen
-* @Last Modified time: 2018-09-03 09:15:49
+* @Last Modified time: 2018-09-17 15:01:12
 */
 import React,{ Component } from 'react';
 import {
@@ -18,6 +18,7 @@ import Home from 'pages/home'
 import User from 'pages/user'
 import Category from 'pages/category'
 import Product from 'pages/product'
+import Order from 'pages/order'
 import ErrorPage from 'common/error-page'
 
 import { getUserName } from 'util'
@@ -55,6 +56,7 @@ class App extends Component{
 						<ProtectedRoute path="/user" component={ User } />				
 						<ProtectedRoute path="/category" component={ Category } />				
 						<ProtectedRoute path="/product" component={ Product } />				
+						<ProtectedRoute path="/order" component={ Order } />				
 						<LoginRoute path="/login" component={ Login } />
 						<Route component={ ErrorPage }  />
 					</Switch>	

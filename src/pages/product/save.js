@@ -2,7 +2,7 @@
 * @Author: TomChen
 * @Date:   2018-08-27 15:19:33
 * @Last Modified by:   TomChen
-* @Last Modified time: 2018-09-03 15:26:32
+* @Last Modified time: 2018-09-17 10:25:47
 */
 import React,{ Component } from 'react';
 import { Breadcrumb,Form, Input,Select,Button,InputNumber } from 'antd';
@@ -185,6 +185,9 @@ class NormalProductSave extends Component{
 				        <FormItem
 				          {...formItemLayout}
 				          label="商品图片"
+				          required={true}
+				          validateStatus={this.props.imagesValidateStatus}
+				          help={this.props.imagesHelp}				          
 				        >
 							<UploadImage
 								action={UPLOAD_PRODUCT_IMAGE}
@@ -232,6 +235,8 @@ const mapStateToProps = (state)=>{
 	return {
 		categoryIdValidateStatus:state.get('product').get('categoryIdValidateStatus'),
 		categoryIdHelp:state.get('product').get('categoryIdHelp'),
+		imagesValidateStatus:state.get('product').get('imagesValidateStatus'),
+		imagesHelp:state.get('product').get('imagesHelp'),		
 		isSaveFetching:state.get('product').get('isSaveFetching'),
 		parentCategoryId:state.get('product').get('parentCategoryId'),
 		categoryId:state.get('product').get('categoryId'),

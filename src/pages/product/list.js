@@ -2,7 +2,7 @@
 * @Author: TomChen
 * @Date:   2018-08-27 15:19:33
 * @Last Modified by:   TomChen
-* @Last Modified time: 2018-09-03 17:11:31
+* @Last Modified time: 2018-09-17 11:10:22
 */
 import React,{ Component } from 'react';
 import { Link} from 'react-router-dom';
@@ -27,11 +27,13 @@ class ProductList extends Component{
 			  title: 'id',
 			  dataIndex: 'id',
 			  key: 'id',
+			  width:250,
 			}, 
 			{
 			  title: '商品名称',
 			  dataIndex: 'name',
 			  key: 'name',
+			  width:350,
 			  render:(name)=>{
 			  	if(keyword){
 			  		let reg = new RegExp("("+keyword+")",'ig');

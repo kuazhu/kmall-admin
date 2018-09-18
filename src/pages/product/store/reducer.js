@@ -2,7 +2,7 @@
 * @Author: TomChen
 * @Date:   2018-08-20 09:18:25
 * @Last Modified by:   TomChen
-* @Last Modified time: 2018-09-03 17:03:00
+* @Last Modified time: 2018-09-17 10:38:49
 */
 import { fromJS } from 'immutable'
 
@@ -16,6 +16,8 @@ const defaultState = fromJS({
 	detail:'',
 	categoryIdValidateStatus:'',
 	categoryIdHelp:'',
+	imagesValidateStatus:'',
+	imagesHelp:'',	
 	isPageFetching:false,
 	current:0,
 	total:0,
@@ -40,7 +42,11 @@ export default (state=defaultState,action)=>{
 		})
 	}
 	if(action.type === types.SET_IMAGES){
-		return state.set('images',action.payload)
+		return state.merge({
+			'images':action.payload,
+			imagesValidateStatus:'',
+			imagesHelp:''			
+		})
 	}
 	if(action.type === types.SET_DETAIL){
 		return state.set('detail',action.payload)
@@ -53,7 +59,12 @@ export default (state=defaultState,action)=>{
 		})
 	}
 	
-
+	if(action.type === types.SET_IMAGES_ERROR){
+		return state.merge({
+			imagesValidateStatus:'error',
+			imagesHelp:'请上传图片',			
+		})
+	}
 	if(action.type === types.SAVE_REQUEST){
 		return state.set('isSaveFetching',true)
 	}

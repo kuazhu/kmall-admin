@@ -1,0 +1,11 @@
+/*
+* @Author: TomChen
+* @Date:   2018-08-24 14:50:05
+* @Last Modified by:   TomChen
+* @Last Modified time: 2018-09-17 15:59:15
+*/
+export const PAGE_REQUEST = 'order/PAGE_REQUEST';
+export const PAGE_DONE = 'order/PAGE_DONE';
+export const SET_PAGE = 'order/SET_PAGE';
+export const SET_ORDER_DETAIL = 'order/SET_ORDER_DETAIL';
+
